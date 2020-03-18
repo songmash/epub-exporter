@@ -1,6 +1,7 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const { transformManifest } = require('./helpers');
 
@@ -12,7 +13,7 @@ const distPath = path.join(rootPath, 'dist');
 module.exports = {
   mode: isProduction ? 'production': 'development',
   entry: {
-    main: path.join(srcPath, 'index.js'),
+    popup: path.join(srcPath, 'popup.js'),
   },
   output: { filename: '[name].js', path: distPath },
   plugins: [
@@ -24,5 +25,30 @@ module.exports = {
          transform: transformManifest
       },
     ]),
-  ]
+    new HtmlWebpackPlugin({
+      filename: 'popup.html',
+      template: path.join(srcPath, 'popup.html'),
+      chunks: ['popup']
+    }),
+  ],
+  module: {
+    rules: [
+      {
+        test: /\.s(a|c)ss$/,
+        loader: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'sass-loader',
+            options: {
+              sourceMap: !isProduction
+            }
+          }
+        ]
+      }
+    ]
+  },
+  resolve: {
+    extensions: ['js', 'jsx', '.scss']
+  }
 };
