@@ -1,5 +1,6 @@
 const path = require('path');
 const rootPath = path.resolve(__dirname, '..');
+const isProduction = process.env.NODE_ENV === 'production'
 
 const transformManifest = (buffer, filePath) => {
   let manifest = {};
@@ -27,6 +28,11 @@ const transformManifest = (buffer, filePath) => {
     version,
     description,
     author,
+  }
+
+  // Because Webpack use eval to execute code when development, add CSP policy to prevent `Uncaught EvalError`
+  if (!isProduction) {
+    newManifest['content_security_policy'] = "script-src 'self' 'unsafe-eval'; object-src 'self'"
   }
 
   return JSON.stringify(newManifest, null, 2);
