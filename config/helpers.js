@@ -1,5 +1,17 @@
-const transformManifest = (buffer) => {
-  const manifest = JSON.parse(buffer.toString());
+const path = require('path');
+const rootPath = path.resolve(__dirname, '..');
+
+const transformManifest = (buffer, filePath) => {
+  let manifest = {};
+  try {
+    manifest = JSON.parse(buffer.toString());
+  } catch(e) {
+    const relativeFilePath = path.relative(rootPath, filePath);
+    e.message = `${e.message} in ${relativeFilePath}`
+
+    throw e;
+  }
+
   const {
     npm_package_name,
     npm_package_version: version,
