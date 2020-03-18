@@ -12,6 +12,7 @@
     "webpack-cli": "^3.3.11"
   },
   "scripts": {
+    "watch": "webpack --config config/webpack.config.js --watch",
     "build": "webpack --config config/webpack.config.js",
     "build-prod": "NODE_ENV=production webpack --config config/webpack.config.js"
   }
