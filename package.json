@@ -1,0 +1,16 @@
+{
+  "name": "epub-exporter",
+  "version": "1.0.0",
+  "description": "Export epub file from purchased book on book store website",
+  "author": "David Liu <msglight4874@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "devDependencies": {
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
+  },
+  "scripts": {
+    "build": "webpack",
+    "build-prod": "NODE_ENV=production webpack"
+  }
+}
