@@ -13,7 +13,7 @@ const distPath = path.join(rootPath, 'dist');
 module.exports = {
   mode: isProduction ? 'production': 'development',
   entry: {
-    popup: path.join(srcPath, 'popup.js'),
+    popup: path.join(srcPath, 'popup.ts'),
   },
   output: { filename: '[name].js', path: distPath },
   plugins: [
@@ -47,7 +47,12 @@ module.exports = {
             }
           }
         ]
-      }
+      },
+      {
+        test: /\.tsx?$/,
+        use: 'ts-loader',
+        exclude: /node_modules/,
+      },
     ]
   },
   resolve: {
