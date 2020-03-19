@@ -10,12 +10,20 @@ const rootPath = path.resolve(__dirname, '..')
 const srcPath = path.join(rootPath, 'src');
 const distPath = path.join(rootPath, 'dist');
 
+const babelLoader = {
+  loader: 'babel-loader',
+  options: {
+    presets: ['@babel/preset-env'],
+  }
+};
+
 module.exports = {
   mode: isProduction ? 'production': 'development',
   entry: {
     popup: path.join(srcPath, 'popup.ts'),
   },
   output: { filename: '[name].js', path: distPath },
+  devtool: isProduction ? false : 'inline-source-map',
   plugins: [
     new CleanWebpackPlugin({
       cleanAfterEveryBuildPatterns: ['!manifest.json'],
@@ -30,7 +38,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       filename: 'popup.html',
       template: path.join(srcPath, 'popup.html'),
-      chunks: ['popup']
+      chunks: ['popup'],
     }),
   ],
   module: {
@@ -44,16 +52,24 @@ module.exports = {
             loader: 'sass-loader',
             options: {
               sourceMap: !isProduction
-            }
-          }
+            },
+          },
         ]
       },
       {
         test: /\.tsx?$/,
-        use: 'ts-loader',
         exclude: /node_modules/,
+        use: [
+          babelLoader,
+          'ts-loader',
+        ]
       },
-    ]
+      {
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: [babelLoader],
+      },
+    ],
   },
   resolve: {
     extensions: ['js', 'jsx', '.tsx', '.ts']

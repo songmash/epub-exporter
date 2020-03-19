@@ -6,6 +6,9 @@
   "license": "MIT",
   "private": true,
   "devDependencies": {
+    "@babel/core": "^7.8.7",
+    "@babel/preset-env": "^7.8.7",
+    "babel-loader": "^8.0.6",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.4.2",
@@ -22,5 +25,6 @@
     "watch": "webpack --config config/webpack.config.js --watch",
     "build": "webpack --config config/webpack.config.js",
     "build-prod": "NODE_ENV=production webpack --config config/webpack.config.js"
-  }
+  },
+  "browserslist": "last 20 Chrome versions, not dead"
 }
