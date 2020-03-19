@@ -17,7 +17,9 @@ module.exports = {
   },
   output: { filename: '[name].js', path: distPath },
   plugins: [
-    new CleanWebpackPlugin(),
+    new CleanWebpackPlugin({
+      cleanAfterEveryBuildPatterns: ['!manifest.json'],
+    }),
     new CopyWebpackPlugin([
       {
          from: path.join(srcPath, 'manifest.json'),
@@ -49,6 +51,6 @@ module.exports = {
     ]
   },
   resolve: {
-    extensions: ['js', 'jsx', '.scss']
+    extensions: ['js', 'jsx', '.tsx', '.ts']
   }
 };
