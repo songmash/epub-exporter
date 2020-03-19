@@ -11,7 +11,7 @@ const babelLoader = {
   loader: 'babel-loader',
   options: {
     presets: ['@babel/preset-env'],
-  }
+  },
 };
 
 module.exports = {
@@ -32,6 +32,18 @@ module.exports = {
   ],
   module: {
     rules: [
+      /**
+       * ESLINT
+       * First, run the linter.
+       * It's important to do this before Babel processes the JS.
+       * Only testing .ts and .tsx files (React code)
+       */
+      {
+        test: /\.(ts|js)x?$/,
+        enforce: 'pre',
+        exclude: /node_modules/,
+        use: 'eslint-loader',
+      },
       {
         test: /\.s(a|c)ss$/,
         loader: [
@@ -43,7 +55,7 @@ module.exports = {
               sourceMap: isDevelopment,
             },
           },
-        ]
+        ],
       },
       {
         test: /\.tsx?$/,
@@ -51,7 +63,7 @@ module.exports = {
         use: [
           babelLoader,
           'ts-loader',
-        ]
+        ],
       },
       {
         test: /\.jsx?$/,
@@ -61,6 +73,6 @@ module.exports = {
     ],
   },
   resolve: {
-    extensions: ['js', 'jsx', '.tsx', '.ts']
-  }
+    extensions: ['.ts', '.tsx', '.js', '.jsx'],
+  },
 };
