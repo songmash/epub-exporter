@@ -4,11 +4,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const { transformManifest } = require('./helpers');
+const { appSrc, appDist } = require('./paths');
 
 const isProduction = process.env.NODE_ENV === 'production'
-const rootPath = path.resolve(__dirname, '..')
-const srcPath = path.join(rootPath, 'src');
-const distPath = path.join(rootPath, 'dist');
 
 const babelLoader = {
   loader: 'babel-loader',
@@ -20,26 +18,18 @@ const babelLoader = {
 module.exports = {
   mode: isProduction ? 'production': 'development',
   entry: {
-    popup: path.join(srcPath, 'popup.ts'),
+    popup: path.join(appSrc, 'popup.ts'),
   },
-  output: { filename: '[name].js', path: distPath },
+  output: { filename: '[name].js', path: appDist },
   devtool: isProduction ? false : 'inline-source-map',
   plugins: [
     new CleanWebpackPlugin({
       cleanAfterEveryBuildPatterns: ['!manifest.json'],
     }),
     new CopyWebpackPlugin([
-      {
-         from: path.join(srcPath, 'manifest.json'),
-         to: path.join(distPath, 'manifest.json'),
-         transform: transformManifest
-      },
+      { from: path.join(appSrc, 'manifest.json'), to: path.join(appDist, 'manifest.json'), transform: transformManifest },
     ]),
-    new HtmlWebpackPlugin({
-      filename: 'popup.html',
-      template: path.join(srcPath, 'popup.html'),
-      chunks: ['popup'],
-    }),
+    new HtmlWebpackPlugin({ filename: 'popup.html', template: path.join(appSrc, 'popup.html'), chunks: ['popup'] }),
   ],
   module: {
     rules: [
