@@ -5,8 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const { transformManifest } = require('./helpers');
 const { appSrc, appDist } = require('./paths');
-
-const isProduction = process.env.NODE_ENV === 'production'
+const { isProduction, isDevelopment } = require('./env');
 
 const babelLoader = {
   loader: 'babel-loader',
@@ -41,7 +40,7 @@ module.exports = {
           {
             loader: 'sass-loader',
             options: {
-              sourceMap: !isProduction
+              sourceMap: isDevelopment,
             },
           },
         ]
