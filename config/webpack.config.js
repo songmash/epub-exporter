@@ -4,7 +4,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const { transformManifest } = require('./helpers');
-const { appSrc, appDist } = require('./paths');
+const { appPath, appSrc, appDist } = require('./paths');
 const { isProduction, isDevelopment } = require('./env');
 
 const babelLoader = {
@@ -45,16 +45,23 @@ module.exports = {
         use: 'eslint-loader',
       },
       {
-        test: /\.s(a|c)ss$/,
+        test: /\.(css|sass|scss)$/,
         loader: [
-          'style-loader',
-          'css-loader',
+          { loader: 'style-loader' },
+          { loader: 'css-loader', options: { sourceMap: isDevelopment, importLoaders: 2 } },
           {
-            loader: 'sass-loader',
+            loader: 'postcss-loader',
             options: {
               sourceMap: isDevelopment,
+              ident: 'postcss',
+              plugins: () => [
+                require('postcss-import')({ root: appPath }),
+                require('postcss-preset-env')(),
+                require('cssnano')()
+              ]
             },
           },
+          { loader: 'sass-loader', options: { sourceMap: isDevelopment } }
         ],
       },
       {
