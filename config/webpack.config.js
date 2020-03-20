@@ -2,6 +2,7 @@ const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const StylelintWebpackPlugin = require('stylelint-webpack-plugin')
 
 const { transformManifest } = require('./helpers');
 const { appPath, appSrc, appDist } = require('./paths');
@@ -29,6 +30,7 @@ module.exports = {
       { from: path.join(appSrc, 'manifest.json'), to: path.join(appDist, 'manifest.json'), transform: transformManifest },
     ]),
     new HtmlWebpackPlugin({ filename: 'popup.html', template: path.join(appSrc, 'popup.html'), chunks: ['popup'] }),
+    new StylelintWebpackPlugin({ context: appSrc }),
   ],
   module: {
     rules: [
