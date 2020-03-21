@@ -11,7 +11,6 @@ const { isProduction, isDevelopment } = require('./env');
 const babelLoader = {
   loader: 'babel-loader',
   options: {
-    presets: ['@babel/preset-env'],
     cacheDirectory: isDevelopment,
   },
 };

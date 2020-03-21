@@ -8,11 +8,12 @@
     "allowJs": true,
     "moduleResolution": "node",
     "types" : [
-      "chrome"
+      "chrome",
+      "jest"
     ],
     "baseUrl": ".",
     "paths": {
       "@src/*": ["./src/*"]
-    },
+    }
   }
 }
