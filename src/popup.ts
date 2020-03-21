@@ -1,4 +1,4 @@
-import styles from './popup.scss';
+import styles from '@src/popup.scss';
 
 // eslint-disable-next-line no-console
 console.log(styles);

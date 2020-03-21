@@ -6,8 +6,13 @@
     "target": "ESNext",
     "jsx": "react",
     "allowJs": true,
+    "moduleResolution": "node",
     "types" : [
       "chrome"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@src/*": ["./src/*"]
+    },
   }
 }
