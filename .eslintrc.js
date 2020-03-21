@@ -24,8 +24,9 @@ module.exports = {
   rules: {
     '@typescript-eslint/semi': ['error', 'always'],
     '@typescript-eslint/indent': ['error', 2, { 'MemberExpression': 'off' }],
-    'arrow-parens': ['error', 'as-needed'],
     '@typescript-eslint/explicit-function-return-type': 'off',
+    'arrow-parens': ['error', 'as-needed'],
+    'import/no-extraneous-dependencies': 'off',
   },
   settings: {
     react: { version: 'detect' },
