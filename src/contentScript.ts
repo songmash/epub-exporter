@@ -5,15 +5,10 @@ import EventHandler, { EventType } from '@src/utils/eventHandler';
   const eventHandler = new EventHandler();
   const detectors = Detectors.map(Detector => new Detector(window));
 
-  document.addEventListener('DOMNodeInserted', () => {
+  eventHandler.subscribe(EventType.DetectBooks, () => {
     const exportableDetector = detectors.find(detector => detector.isExportable());
+    const books = exportableDetector ? exportableDetector.extractBooks() : [];
 
-    if (exportableDetector) {
-      const books = exportableDetector.extractBooks();
-
-      eventHandler.send(EventType.SetBooks, { books });
-    } else {
-      eventHandler.send(EventType.SetBooks, { books: [] });
-    }
+    eventHandler.sendToExtension(EventType.SetBooks, { books });
   });
 })();

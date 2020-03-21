@@ -1,8 +1,7 @@
 export enum EventType {
+  DetectBooks = 'DetectBooks',
   SetBooks = 'SetBooks',
 }
-
-export type Runtime = typeof chrome.runtime;
 
 type Callback = (data?: object) => void;
 
@@ -19,12 +18,18 @@ interface Listeners {
 export default class EventHandler {
   private listeners: Listeners[] = [];
 
-  constructor(private runtime = chrome.runtime) {
+  constructor(private chrome = window.chrome) {
     this.bindListeners();
   }
 
-  send(type: EventType, data?: object) {
-    this.runtime.sendMessage({ type, data });
+  sendToExtension(type: EventType, data?: object) {
+    this.chrome.runtime.sendMessage({ type, data });
+  }
+
+  sendToActiveTab(type: EventType, data?: object) {
+    this.chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+      this.chrome.tabs.sendMessage(tabs[0].id, { type, data });
+    });
   }
 
   subscribe(type: EventType, callback: Callback) {
@@ -32,7 +37,7 @@ export default class EventHandler {
   }
 
   private bindListeners() {
-    this.runtime.onMessage.addListener((message: Message) => {
+    this.chrome.runtime.onMessage.addListener((message: Message) => {
       const { type, data } = message;
 
       this.listeners.forEach(listener => {

@@ -1,64 +1,67 @@
-import { EventType } from '@src/utils/eventHandler';
+import EventHandler, { EventType } from '@src/utils/eventHandler';
+import mockChrome from './mocks/mockChrome';
 
-const mockDetectors = (mockedIsExportable: Function, mockedExtractBooks: Function) => {
-  class MockDetector {
-    public isExportable = mockedIsExportable;
+type Chrome = typeof chrome;
 
-    public extractBooks = mockedExtractBooks;
-  }
-  jest.setMock('@src/detectors', [MockDetector]);
+const isExportable = jest.fn(() => true);
+const extractBooks = jest.fn();
+class MockDetector {
+  public isExportable = isExportable;
+
+  public extractBooks = extractBooks;
+}
+jest.setMock('@src/detectors', [MockDetector]);
+
+const mockedChrome = mockChrome();
+
+const loadContentScript = () => {
+  // eslint-disable-next-line global-require
+  require('@src/contentScript');
 };
-const mockEventHandler = (mockedSend: Function) => {
-  jest.mock('@src/utils/eventHandler', () => {
-    const oldEventHandler = jest.requireActual('@src/utils/eventHandler');
 
-    return ({
-      __esModule: true,
-      ...oldEventHandler,
-      default: jest.fn(() => ({ send: mockedSend })),
-    });
-  });
+const detectBooks = () => {
+  const eventHandler = new EventHandler(mockedChrome);
+  eventHandler.sendToActiveTab(EventType.DetectBooks);
 };
+
+jest.spyOn(EventHandler.prototype, 'sendToExtension');
+
+const oldChrome = window.chrome;
 
 describe('contentScript', () => {
-  const executeContentScript = () => {
-    // eslint-disable-next-line global-require
-    require('@src/contentScript');
+  beforeEach(() => { window.chrome = mockedChrome; });
 
-    document.dispatchEvent(new Event('DOMNodeInserted'));
-  };
-
-  beforeEach(() => {
+  afterEach(() => {
     jest.resetModules();
     jest.clearAllMocks();
+
+    window.chrome = oldChrome;
   });
 
   test('send Books to extension when any isExportable Detector found', () => {
     const books = [{ id: 'book double' }];
-    const mockedIsExportable = jest.fn(() => true);
-    const mockedExtractBooks = jest.fn(() => books);
-    const mockedSend = jest.fn();
-    mockDetectors(mockedIsExportable, mockedExtractBooks);
-    mockEventHandler(mockedSend);
+    isExportable.mockImplementationOnce(() => true);
+    extractBooks.mockImplementationOnce(() => books);
 
-    executeContentScript();
+    loadContentScript();
+    detectBooks();
 
-    expect(mockedIsExportable).toHaveBeenCalled();
-    expect(mockedExtractBooks).toHaveBeenCalled();
-    expect(mockedSend).toBeCalledWith(EventType.SetBooks, { books });
+    expect(isExportable).toHaveBeenCalled();
+    expect(extractBooks).toHaveBeenCalled();
+    expect(EventHandler.prototype.sendToExtension).toBeCalledWith(EventType.SetBooks, { books });
   });
 
   test('send empty array to extension when no isExportable Detector found', () => {
-    const mockedIsExportable = jest.fn(() => false);
-    const mockedExtractBooks = jest.fn(() => []);
-    const mockedSend = jest.fn();
-    mockDetectors(mockedIsExportable, mockedExtractBooks);
-    mockEventHandler(mockedSend);
+    isExportable.mockImplementationOnce(() => false);
+    extractBooks.mockImplementationOnce(() => []);
 
-    executeContentScript();
+    loadContentScript();
+    detectBooks();
 
-    expect(mockedIsExportable).toHaveBeenCalled();
-    expect(mockedExtractBooks).not.toHaveBeenCalled();
-    expect(mockedSend).toBeCalledWith(EventType.SetBooks, { books: [] });
+    expect(isExportable).toHaveBeenCalled();
+    expect(extractBooks).toHaveBeenCalled();
+    expect(
+      EventHandler.prototype.sendToExtension,
+    ).toBeCalledWith(EventType.SetBooks, { books: [] });
   });
 });

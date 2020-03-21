@@ -5,7 +5,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const StylelintWebpackPlugin = require('stylelint-webpack-plugin');
 
 const transformManifest = require('./utils/transformManifest');
-const { appPath, appSrc, appDist } = require('./utils/paths');
+const { appPath, appSrc, appDist, appTest } = require('./utils/paths');
 const { isProduction, isDevelopment } = require('./utils/env');
 
 const babelLoader = {
@@ -84,6 +84,9 @@ module.exports = {
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
-    alias: { '@src': appSrc },
+    alias: {
+      '@src': appSrc,
+      '@test': appTest,
+    },
   },
 };

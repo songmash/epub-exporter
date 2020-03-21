@@ -8,4 +8,5 @@ module.exports = {
   appPath: resolveApp('.'),
   appSrc: resolveApp('src'),
   appDist: resolveApp('dist'),
+  appTest: resolveApp('test'),
 };
