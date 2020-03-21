@@ -1,1 +1,4 @@
 /config
+babel.config.js
+declarations.d.ts
+jest.config.js
