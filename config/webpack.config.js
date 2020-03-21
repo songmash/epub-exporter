@@ -12,6 +12,7 @@ const babelLoader = {
   loader: 'babel-loader',
   options: {
     presets: ['@babel/preset-env'],
+    cacheDirectory: isDevelopment,
   },
 };
 
@@ -44,7 +45,7 @@ module.exports = {
         test: /\.(ts|js)x?$/,
         enforce: 'pre',
         exclude: /node_modules/,
-        use: 'eslint-loader',
+        use: [{ loader: 'eslint-loader', options: { cache: true } }],
       },
       {
         test: /\.(css|sass|scss)$/,
