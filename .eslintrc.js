@@ -3,6 +3,7 @@ const ecmaVersion = (new Date()).getFullYear() - 2009;
 module.exports = {
   parser: '@typescript-eslint/parser',
   extends: [
+    'airbnb-typescript',
     'eslint:recommended',
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
@@ -18,14 +19,17 @@ module.exports = {
     ecmaFeatures: {
       jsx: true,
     },
+    project: 'tsconfig.json',
   },
-  rules: {},
+  rules: {
+    '@typescript-eslint/semi': ['error', 'always'],
+    '@typescript-eslint/indent': ['error', 2, { 'MemberExpression': 'off' }],
+    'arrow-parens': ['error', 'as-needed'],
+    '@typescript-eslint/explicit-function-return-type': 'off',
+  },
   settings: {
-    react: {
-      version: 'detect',
-    },
+    react: { version: 'detect' },
+    'import/resolver': 'webpack',
   },
-  env: {
-    browser: true,
-  },
+  env: { browser: true },
 };

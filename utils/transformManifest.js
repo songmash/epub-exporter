@@ -8,7 +8,7 @@ const parseJsonFromBuffer = (buffer, filePath) => {
     return JSON.parse(buffer.toString());
   } catch (e) {
     const relativeFilePath = path.relative(appPath, filePath);
-    e.message = `${e.message} in ${relativeFilePath}`
+    e.message = `${e.message} in ${relativeFilePath}`;
 
     throw e;
   }
@@ -16,7 +16,8 @@ const parseJsonFromBuffer = (buffer, filePath) => {
 
 const transformManifest = (buffer, filePath) => {
   const manifest = parseJsonFromBuffer(buffer, filePath);
-  const name = npmPackage.name.replace('-', ' ').replace(/^\w/, c => c.toUpperCase()); // change dash to space and uppercase first letter
+  // change dash to space and uppercase first letter
+  const name = npmPackage.name.replace('-', ' ').replace(/^\w/, c => c.toUpperCase());
   const { description, author, version } = npmPackage;
   const newManifest = {
     ...manifest,
@@ -26,7 +27,8 @@ const transformManifest = (buffer, filePath) => {
     author,
   };
 
-  // Because Webpack use eval to execute code when development, add CSP policy to prevent `Uncaught EvalError`
+  // Because Webpack use eval to execute code when development,
+  // add CSP policy to prevent `Uncaught EvalError`
   if (isDevelopment) {
     newManifest['content_security_policy'] = "script-src 'self' 'unsafe-eval'; object-src 'self'";
   }
@@ -34,4 +36,4 @@ const transformManifest = (buffer, filePath) => {
   return JSON.stringify(newManifest, null, 2);
 };
 
-exports.transformManifest = transformManifest;
+module.exports = transformManifest;

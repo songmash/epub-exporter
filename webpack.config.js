@@ -1,12 +1,12 @@
 const path = require('path');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HtmlWebpackPlugin = require('html-webpack-plugin')
-const StylelintWebpackPlugin = require('stylelint-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const StylelintWebpackPlugin = require('stylelint-webpack-plugin');
 
-const { transformManifest } = require('./helpers');
-const { appPath, appSrc, appDist } = require('./paths');
-const { isProduction, isDevelopment } = require('./env');
+const transformManifest = require('./utils/transformManifest');
+const { appPath, appSrc, appDist } = require('./utils/paths');
+const { isProduction, isDevelopment } = require('./utils/env');
 
 const babelLoader = {
   loader: 'babel-loader',
@@ -16,7 +16,7 @@ const babelLoader = {
 };
 
 module.exports = {
-  mode: isProduction ? 'production': 'development',
+  mode: isProduction ? 'production' : 'development',
   entry: {
     popup: path.join(appSrc, 'popup.ts'),
     contentScript: path.join(appSrc, 'contentScript.ts'),
@@ -60,11 +60,11 @@ module.exports = {
               plugins: () => [
                 require('postcss-import')({ root: appPath }),
                 require('postcss-preset-env')(),
-                require('cssnano')()
-              ]
+                require('cssnano')(),
+              ],
             },
           },
-          { loader: 'sass-loader', options: { sourceMap: isDevelopment } }
+          { loader: 'sass-loader', options: { sourceMap: isDevelopment } },
         ],
       },
       {

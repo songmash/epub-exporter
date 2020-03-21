@@ -1,4 +1,4 @@
-const { isTest } = require('./config/env');
+const { isTest } = require('./utils/env');
 
 const testPresets = [
   ['@babel/preset-env', { targets: { node: 'current' } }],

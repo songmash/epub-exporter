@@ -1,4 +1,3 @@
-/config
-babel.config.js
-declarations.d.ts
-jest.config.js
+*.js
+!src/*.js
+!test/*.js

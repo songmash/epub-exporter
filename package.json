@@ -19,6 +19,8 @@
     "css-loader": "^3.4.2",
     "cssnano": "^4.1.10",
     "eslint": "^6.8.0",
+    "eslint-config-airbnb-typescript": "^7.2.0",
+    "eslint-import-resolver-webpack": "^0.12.1",
     "eslint-loader": "^3.0.3",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-jsx-a11y": "^6.2.3",
@@ -41,11 +43,11 @@
     "webpack-cli": "^3.3.11"
   },
   "scripts": {
-    "watch": "webpack --config config/webpack.config.js --watch",
-    "build": "webpack --config config/webpack.config.js",
-    "build-prod": "NODE_ENV=production webpack --config config/webpack.config.js",
-    "lint": "eslint --ext .ts,.tsx,.js,.jsx ./src",
-    "lint-fix": "eslint --ext .ts,.tsx,.js,.jsx ./src --fix",
+    "watch": "webpack --watch",
+    "build": "webpack",
+    "build-prod": "NODE_ENV=production webpack",
+    "lint": "eslint --ext .ts,.tsx,.js,.jsx ./",
+    "lint-fix": "eslint --ext .ts,.tsx,.js,.jsx ./ --fix",
     "test": "jest"
   },
   "browserslist": "last 20 Chrome versions, not dead",
