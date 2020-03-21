@@ -20,6 +20,7 @@ module.exports = {
   mode: isProduction ? 'production': 'development',
   entry: {
     popup: path.join(appSrc, 'popup.ts'),
+    contentScript: path.join(appSrc, 'contentScript.ts'),
   },
   output: { filename: '[name].js', path: appDist },
   devtool: isProduction ? false : 'inline-source-map',
