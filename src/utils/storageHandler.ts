@@ -21,7 +21,10 @@ export default class StorageHandler {
   }
 
   get(type: StorageType): Promise<unknown> {
-    return new Promise(resolve => this.chrome.storage.local.get(type, resolve));
+    return new Promise(resolve => this.chrome
+                                      .storage
+                                      .local
+                                      .get(type, items => resolve(items[type])));
   }
 
   subscribe(type: StorageType, callback: Callback) {

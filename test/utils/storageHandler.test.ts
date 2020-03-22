@@ -3,7 +3,7 @@ import mockChrome, { Chrome } from '@test/mocks/mockChrome';
 
 let mockedChrome: Chrome;
 const get = async (key: string) => new Promise(resolve => {
-  mockedChrome.storage.local.get(key, resolve);
+  mockedChrome.storage.local.get(key, items => resolve(items[key]));
 });
 const set = (key: string, value: unknown) => new Promise(resolve => {
   mockedChrome.storage.local.set({ [key]: value }, resolve);
