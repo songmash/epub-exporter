@@ -18,7 +18,7 @@ const babelLoader = {
 module.exports = {
   mode: isProduction ? 'production' : 'development',
   entry: {
-    popup: path.join(appSrc, 'popup.ts'),
+    popup: path.join(appSrc, 'popup.tsx'),
     contentScript: path.join(appSrc, 'contentScript.ts'),
   },
   output: { filename: '[name].js', path: appDist },
@@ -51,7 +51,13 @@ module.exports = {
         test: /\.(css|sass|scss)$/,
         loader: [
           { loader: 'style-loader' },
-          { loader: 'css-loader', options: { sourceMap: isDevelopment, importLoaders: 2 } },
+          { loader: 'css-loader',
+            options: {
+              sourceMap: isDevelopment,
+              importLoaders: 2,
+              modules: { mode: 'global' },
+            },
+          },
           {
             loader: 'postcss-loader',
             options: {
