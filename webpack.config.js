@@ -1,5 +1,4 @@
 const path = require('path');
-const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const StylelintWebpackPlugin = require('stylelint-webpack-plugin');
@@ -24,9 +23,6 @@ module.exports = {
   output: { filename: '[name].js', path: appDist },
   devtool: isProduction ? false : 'inline-source-map',
   plugins: [
-    new CleanWebpackPlugin({
-      cleanAfterEveryBuildPatterns: ['!manifest.json'],
-    }),
     new CopyWebpackPlugin([
       { from: path.join(appSrc, 'manifest.json'), to: path.join(appDist, 'manifest.json'), transform: transformManifest },
     ]),
