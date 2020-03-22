@@ -8,11 +8,12 @@ describe('EventHandler', () => {
       const eventHandler = new EventHandler(mockedChrome);
       const listener = jest.fn();
       const data = { books: [{ id: 'book double' }] };
+      const type = 'DetectBooks' as EventType;
 
       mockedChrome.runtime.onMessage.addListener(listener);
-      eventHandler.sendToExtension(EventType.SetBooks, data);
+      eventHandler.sendToExtension(type, data);
 
-      expect(listener).toBeCalledWith({ type: EventType.SetBooks, data });
+      expect(listener).toBeCalledWith({ type, data });
     });
   });
 
@@ -22,11 +23,12 @@ describe('EventHandler', () => {
       const eventHandler = new EventHandler(mockedChrome);
       const listener = jest.fn();
       const data = { books: [{ id: 'book double' }] };
+      const type = 'DetectBooks' as EventType;
 
       mockedChrome.runtime.onMessage.addListener(listener);
-      eventHandler.sendToActiveTab(EventType.SetBooks, data);
+      eventHandler.sendToActiveTab(type, data);
 
-      expect(listener).toBeCalledWith({ type: EventType.SetBooks, data });
+      expect(listener).toBeCalledWith({ type, data });
     });
   });
 
@@ -36,10 +38,11 @@ describe('EventHandler', () => {
       const eventHandler = new EventHandler(mockedChrome);
       const callback = jest.fn();
       const data = { books: [{ id: 'book double' }] };
+      const type = 'DetectBooks' as EventType;
 
-      eventHandler.subscribe(EventType.SetBooks, callback);
+      eventHandler.subscribe(type, callback);
 
-      mockedChrome.runtime.sendMessage({ type: EventType.SetBooks, data });
+      mockedChrome.runtime.sendMessage({ type, data });
       expect(callback).toBeCalledWith(data);
 
       mockedChrome.runtime.sendMessage({ type: 'invalid', data: 'invalid' });

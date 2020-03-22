@@ -1,5 +1,5 @@
 export enum EventType {
-  SetBooks = 'SetBooks',
+  DetectBooks = 'DetectBooks',
 }
 
 type Callback = (data?: object) => void;
