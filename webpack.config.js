@@ -86,6 +86,10 @@ module.exports = {
         exclude: /node_modules/,
         use: [babelLoader],
       },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf|png|svg|jpg|gif)$/,
+        use: { loader: 'file-loader' },
+      },
     ],
   },
   resolve: {

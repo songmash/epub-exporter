@@ -2,6 +2,8 @@ import React from 'react';
 
 import style from '@src/stylesheets/popup.scss';
 
+import Box from '@material-ui/core/Box';
+
 // import StorageHandler, { StorageType } from '@src/utils/storageHandler';
 
 // const storageHandler = new StorageHandler();
@@ -11,8 +13,8 @@ import style from '@src/stylesheets/popup.scss';
 // storageHandler.subscribe(StorageType.Books, (_, newBooks) => { updateBooks(newBooks); });
 
 const Popup = () => (
-  <div className={style.popup}>
-    <h1>Hello, world!</h1>
-  </div>
+  <Box className={style.popup} color="white" bgcolor="palevioletred">
+    Hello, world!
+  </Box>
 );
 export default Popup;
