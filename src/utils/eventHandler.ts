@@ -9,13 +9,13 @@ interface Message {
   data?: object;
 }
 
-interface Listeners {
+interface Listener {
   type: EventType;
   callback: Callback;
 }
 
 export default class EventHandler {
-  private listeners: Listeners[] = [];
+  private listeners: Listener[] = [];
 
   constructor(private chrome = window.chrome) {
     this.bindListeners();
