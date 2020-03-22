@@ -1,28 +1,53 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import {
   List, ListItem, ListItemText, ListItemAvatar, Avatar, Button, Box, Divider, Typography,
+  CircularProgress,
 } from '@material-ui/core';
 
 import style from '@src/stylesheets/popup.scss';
 
 import StorageHandler, { StorageType } from '@src/utils/storageHandler';
+import EventHandler, { EventType } from '@src/utils/eventHandler';
 import Book from '@src/types/book';
 
 const storageHandler = new StorageHandler();
+const eventHandler = new EventHandler();
 
 const Popup = () => {
   const [books, setBooks] = useState<Book[]>([]);
-  useEffect(() => {
-    storageHandler.get(StorageType.Books).then(setBooks);
-
-    storageHandler.subscribe(StorageType.Books, (_, newBooks) => { setBooks(newBooks as Book[]); });
-  }, []);
+  const [loaded, setLoaded] = useState(false);
   const noBooks = books.length === 0;
+
+  useEffect(() => {
+    (async () => {
+      // clear old books
+      await storageHandler.set(StorageType.Books, null);
+
+      // obtain books from page
+      storageHandler.subscribe(StorageType.Books, (_, newBooks) => {
+        setBooks(newBooks as Book[]);
+        setLoaded(true);
+      });
+
+      // Timeout for 10 seconds
+      setTimeout(() => setLoaded(true), 3000);
+
+      eventHandler.sendToActiveTab(EventType.DetectBooks);
+    })();
+  }, []);
+
+  if (!loaded) {
+    return (
+      <Box mx={16} my={2}>
+        <CircularProgress />
+      </Box>
+    );
+  }
 
   if (noBooks) {
     return (
       <Typography variant="h6" noWrap>
-        <Box textAlign="center" mx={2} m={1}>
+        <Box textAlign="center" mx={2} my={1}>
           沒有可供下載書籍
         </Box>
       </Typography>
