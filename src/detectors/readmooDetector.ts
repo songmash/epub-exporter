@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 import Detector from '@src/types/detector';
 import Book from '@src/types/book';
 
@@ -21,15 +19,14 @@ export default class ReadmooDetector implements Detector {
 
   extractBooks(): Book[] {
     const { document } = this.window;
-    const $items = $(document).find('.library-item');
+    const libraryItems = document.querySelectorAll('.library-item');
     const books: Book[] = [];
 
-    $items.each((_, elem) => {
-      const $item = $(elem);
-      const $bookLink = $item.find('.cover-container > .cover > a');
-      const id = $bookLink.attr('href').split('/').pop();
-      const title = $item.find('.info > .title').text();
-      const coverImageUrl = $bookLink.find('.cover-img').attr('src');
+    libraryItems.forEach(libraryItem => {
+      const bookLink = libraryItem.querySelector('.cover-container > .cover > a');
+      const id = bookLink.getAttribute('href').split('/').pop();
+      const title = libraryItem.querySelector('.info > .title').textContent;
+      const coverImageUrl = bookLink.querySelector('.cover-img').getAttribute('src');
 
       books.push({ id, title, coverImageUrl });
     });
