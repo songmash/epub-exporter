@@ -1,6 +1,6 @@
 type Listener = (message: object) => void;
 
-type Chrome = typeof window.chrome;
+export type Chrome = typeof window.chrome;
 
 interface Tab {
   id?: number;

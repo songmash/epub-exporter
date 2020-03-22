@@ -1,8 +1,8 @@
-import EventHandler, { EventType } from './utils/eventHandler';
+import StorageHandler, { StorageType } from '@src/utils/storageHandler';
 
-const eventHandler = new EventHandler();
+const storageHandler = new StorageHandler();
 const jsonPre = document.querySelector('pre.json');
+const updateBooks = (books: unknown) => { jsonPre.innerHTML = JSON.stringify(books, null, '  '); };
 
-eventHandler.subscribe(EventType.SetBooks, data => {
-  jsonPre.innerHTML = JSON.stringify(data, null, '  ');
-});
+storageHandler.get(StorageType.Books).then(updateBooks);
+storageHandler.subscribe(StorageType.Books, (_, newBooks) => { updateBooks(newBooks); });

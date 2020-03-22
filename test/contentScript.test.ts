@@ -1,9 +1,10 @@
-import EventHandler, { EventType } from '@src/utils/eventHandler';
 import Book from '@src/types/book';
+import StorageHandler, { StorageType } from '@src/utils/storageHandler';
+import mockChrome from './mocks/mockChrome';
 
 const isExportable = jest.fn();
 const extractBooks = jest.fn();
-const sendToExtension = jest.spyOn(EventHandler.prototype, 'sendToExtension').mockImplementation();
+const set = jest.spyOn(StorageHandler.prototype, 'set').mockImplementation();
 
 // for test debounce function
 jest.useFakeTimers();
@@ -15,15 +16,6 @@ class MockDetector {
   public extractBooks = extractBooks;
 }
 jest.setMock('@src/detectors', [MockDetector]);
-
-// mock @src/utils/eventHandler
-jest.mock('@src/utils/eventHandler', () => {
-  const { default: RealEventHandler, ...components } = jest.requireActual('@src/utils/eventHandler');
-  function MockedEventHandler() { }
-  MockedEventHandler.prototype = RealEventHandler.prototype;
-
-  return ({ __esModule: true, default: MockedEventHandler, ...components });
-});
 
 // mock MutationObserver
 type MutationObserver = typeof window.MutationObserver;
@@ -39,6 +31,8 @@ const loadContentScript = () => jest.isolateModules(() => {
 });
 
 describe('contentScript', () => {
+  beforeEach(() => { window.chrome = mockChrome(); });
+  afterEach(() => { delete window.chrome; });
   it('send Books to extension when any exportable detector found', () => {
     const books = [{ id: 'book double' }];
     isExportable.mockImplementationOnce(() => true);
@@ -48,7 +42,7 @@ describe('contentScript', () => {
 
     expect(isExportable).toHaveBeenCalled();
     expect(extractBooks).toHaveBeenCalled();
-    expect(sendToExtension).toBeCalledWith(EventType.SetBooks, { books });
+    expect(set).toBeCalledWith(StorageType.Books, books);
   });
 
   it('send empty array to extension when no exportable detector found', () => {
@@ -60,6 +54,6 @@ describe('contentScript', () => {
 
     expect(isExportable).toHaveBeenCalled();
     expect(extractBooks).not.toHaveBeenCalled();
-    expect(sendToExtension).toBeCalledWith(EventType.SetBooks, { books });
+    expect(set).toBeCalledWith(StorageType.Books, books);
   });
 });

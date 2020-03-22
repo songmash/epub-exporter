@@ -1,7 +1,7 @@
 import StorageHandler, { StorageType } from '@src/utils/storageHandler';
-import mockChrome from '@test/mocks/mockChrome';
+import mockChrome, { Chrome } from '@test/mocks/mockChrome';
 
-const mockedChrome = mockChrome();
+let mockedChrome: Chrome;
 const get = async (key: string) => new Promise(resolve => {
   mockedChrome.storage.local.get(key, resolve);
 });
@@ -10,6 +10,7 @@ const set = (key: string, value: unknown) => new Promise(resolve => {
 });
 
 describe('StorageHandler', () => {
+  beforeEach(() => { mockedChrome = mockChrome(); });
   describe('#set', () => {
     it('store value to storage', async () => {
       const books = [{ id: 'book double' }];
