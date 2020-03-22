@@ -1,10 +1,14 @@
 import EventHandler, { EventType } from '@src/utils/eventHandler';
-import mockChrome from './mocks/mockChrome';
+import Book from '@src/types/book';
 
-type Chrome = typeof chrome;
-
-const isExportable = jest.fn(() => true);
+const isExportable = jest.fn();
 const extractBooks = jest.fn();
+const sendToExtension = jest.spyOn(EventHandler.prototype, 'sendToExtension').mockImplementation();
+
+// for test debounce function
+jest.useFakeTimers();
+
+// mock @src/detectors
 class MockDetector {
   public isExportable = isExportable;
 
@@ -12,56 +16,50 @@ class MockDetector {
 }
 jest.setMock('@src/detectors', [MockDetector]);
 
-const mockedChrome = mockChrome();
+// mock @src/utils/eventHandler
+jest.mock('@src/utils/eventHandler', () => {
+  const { default: RealEventHandler, ...components } = jest.requireActual('@src/utils/eventHandler');
+  function MockedEventHandler() { }
+  MockedEventHandler.prototype = RealEventHandler.prototype;
 
-const loadContentScript = () => {
+  return ({ __esModule: true, default: MockedEventHandler, ...components });
+});
+
+// mock MutationObserver
+type MutationObserver = typeof window.MutationObserver;
+// eslint-disable-next-line func-names, prefer-arrow-callback
+const MockMutationObserver = jest.fn(function (callback: Function) { callback(); });
+MockMutationObserver.prototype = { observe: jest.fn() };
+window.MutationObserver = MockMutationObserver as unknown as MutationObserver;
+
+const loadContentScript = () => jest.isolateModules(() => {
   // eslint-disable-next-line global-require
   require('@src/contentScript');
-};
-
-const detectBooks = () => {
-  const eventHandler = new EventHandler(mockedChrome);
-  eventHandler.sendToActiveTab(EventType.DetectBooks);
-};
-
-jest.spyOn(EventHandler.prototype, 'sendToExtension');
-
-const oldChrome = window.chrome;
+  jest.runAllTimers();
+});
 
 describe('contentScript', () => {
-  beforeEach(() => { window.chrome = mockedChrome; });
-
-  afterEach(() => {
-    jest.resetModules();
-    jest.clearAllMocks();
-
-    window.chrome = oldChrome;
-  });
-
-  test('send Books to extension when any isExportable Detector found', () => {
+  it('send Books to extension when any exportable detector found', () => {
     const books = [{ id: 'book double' }];
     isExportable.mockImplementationOnce(() => true);
     extractBooks.mockImplementationOnce(() => books);
 
     loadContentScript();
-    detectBooks();
 
     expect(isExportable).toHaveBeenCalled();
     expect(extractBooks).toHaveBeenCalled();
-    expect(EventHandler.prototype.sendToExtension).toBeCalledWith(EventType.SetBooks, { books });
+    expect(sendToExtension).toBeCalledWith(EventType.SetBooks, { books });
   });
 
-  test('send empty array to extension when no isExportable Detector found', () => {
+  it('send empty array to extension when no exportable detector found', () => {
+    const books: Book[] = [];
     isExportable.mockImplementationOnce(() => false);
-    extractBooks.mockImplementationOnce(() => []);
+    extractBooks.mockImplementationOnce(() => books);
 
     loadContentScript();
-    detectBooks();
 
     expect(isExportable).toHaveBeenCalled();
-    expect(extractBooks).toHaveBeenCalled();
-    expect(
-      EventHandler.prototype.sendToExtension,
-    ).toBeCalledWith(EventType.SetBooks, { books: [] });
+    expect(extractBooks).not.toHaveBeenCalled();
+    expect(sendToExtension).toBeCalledWith(EventType.SetBooks, { books });
   });
 });

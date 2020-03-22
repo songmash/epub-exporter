@@ -27,6 +27,7 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     'arrow-parens': ['error', 'as-needed'],
     'import/no-extraneous-dependencies': 'off',
+    'no-new': 'off',
   },
   settings: {
     react: { version: 'detect' },

@@ -1,5 +1,4 @@
 export enum EventType {
-  DetectBooks = 'DetectBooks',
   SetBooks = 'SetBooks',
 }
 
