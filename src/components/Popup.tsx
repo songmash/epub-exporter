@@ -1,7 +1,15 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import {
-  List, ListItem, ListItemText, ListItemAvatar, Avatar, Button, Box, Divider, Typography,
+  Avatar,
+  Box,
+  Button,
   CircularProgress,
+  Divider,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
 } from '@material-ui/core';
 
 import style from '@src/stylesheets/popup.scss';
@@ -17,6 +25,9 @@ const Popup = () => {
   const [books, setBooks] = useState<Book[]>([]);
   const [loaded, setLoaded] = useState(false);
   const noBooks = books.length === 0;
+  const downloadBook = (book: Book) => {
+    eventHandler.sendToExtension(EventType.DownloadBook, book);
+  };
 
   useEffect(() => {
     (async () => {
@@ -29,7 +40,7 @@ const Popup = () => {
         setLoaded(true);
       });
 
-      // Timeout for 10 seconds
+      // Timeout for 3 seconds
       setTimeout(() => setLoaded(true), 3000);
 
       eventHandler.sendToActiveTab(EventType.DetectBooks);
@@ -64,7 +75,7 @@ const Popup = () => {
                 <Avatar variant="square" alt={book.title} src={book.coverImageUrl} />
               </ListItemAvatar>
               <ListItemText primary={book.title} />
-              <Button variant="contained" color="primary">
+              <Button variant="contained" color="primary" onClick={() => downloadBook(book)}>
                 下載
               </Button>
             </ListItem>
