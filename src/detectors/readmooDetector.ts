@@ -1,5 +1,5 @@
 import Detector from '@src/types/detector';
-import Book from '@src/types/book';
+import Book, { Source } from '@src/types/book';
 
 const libraryHostname = 'read.readmoo.com';
 
@@ -27,8 +27,14 @@ export default class ReadmooDetector implements Detector {
       const id = bookLink.getAttribute('href').split('/').pop();
       const title = libraryItem.querySelector('.info > .title').textContent;
       const coverImageUrl = bookLink.querySelector('.cover-img').getAttribute('src');
+      const source = Source.Readmoo;
 
-      books.push({ id, title, coverImageUrl });
+      books.push({
+        id,
+        title,
+        coverImageUrl,
+        source,
+      });
     });
 
     return books;

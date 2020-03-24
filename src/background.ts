@@ -1,10 +1,12 @@
 import EventHandler, { EventType } from '@src/utils/eventHandler';
 import Book from '@src/types/book';
+import blobToDataUrl from '@src/utils/blobToDataUrl';
 
 const eventHandler = new EventHandler();
-eventHandler.subscribe(EventType.DownloadBook, (book: Book) => {
+eventHandler.subscribe(EventType.DownloadBook, async (book: Book) => {
   // eslint-disable-next-line no-console
-  console.log(book);
-  const url = `data:application/epub+zip;base64,${btoa('Hello, world')}`;
-  chrome.downloads.download({ url, filename: `${book.title}.epub` });
+  const blob = new Blob([JSON.stringify(book, null, 2)], { type: 'application/json' });
+  const dataUrl = await blobToDataUrl(blob);
+
+  chrome.downloads.download({ url: dataUrl, filename: `${book.title}.epub` });
 });
