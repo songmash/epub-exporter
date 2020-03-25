@@ -1,3 +1,3 @@
 export default interface Exporter {
-  export: () => Blob;
+  export: () => Promise<Blob>;
 }

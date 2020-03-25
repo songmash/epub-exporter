@@ -25,6 +25,7 @@ module.exports = {
     '@typescript-eslint/semi': ['error', 'always'],
     '@typescript-eslint/indent': ['error', 2, { 'MemberExpression': 'off' }],
     '@typescript-eslint/explicit-function-return-type': 'off',
+    '@typescript-eslint/no-unused-vars': ["error", { "argsIgnorePattern": "^_" }],
     'arrow-parens': ['error', 'as-needed'],
     'import/no-extraneous-dependencies': 'off',
     'no-new': 'off',
