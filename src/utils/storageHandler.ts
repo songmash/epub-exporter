@@ -1,5 +1,6 @@
 export enum StorageType {
   Books = 'Books',
+  Status = 'Status',
 }
 
 type Callback = (oldValue: unknown, newValue: unknown) => void;

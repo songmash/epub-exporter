@@ -1,10 +1,10 @@
-import { Source } from '@src/types/book';
+import Book, { Source } from '@src/types/book';
 import ReadmooExporter from '@src/exporters/readmooExporter';
 
-export const exporterSelector = (source: Source) => {
-  switch (source) {
+export const exporterSelector = (book: Book) => {
+  switch (book.source) {
   case Source.Readmoo:
-    return new ReadmooExporter();
+    return new ReadmooExporter(book);
   default:
     throw new Error('Undefined Exporter');
   }
