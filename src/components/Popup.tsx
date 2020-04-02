@@ -41,7 +41,7 @@ const StatusRow = (props: { status?: Status }) => {
         <Box mr={2}>
           <Avatar variant="square" alt={book.title} src={book.coverImageUrl} />
         </Box>
-        <Box>
+        <Box width="100%">
           <Typography variant="subtitle1">
             {book.title}
           </Typography>
