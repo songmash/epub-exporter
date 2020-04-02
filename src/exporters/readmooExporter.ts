@@ -7,15 +7,19 @@ const decoder = new TextDecoder('utf-8');
 
 const arrayBufferToString = (buffer: ArrayBuffer) => decoder.decode(new Uint8Array(buffer));
 
-const config: AxiosRequestConfig = {
-  withCredentials: true,
-  headers: {
-    authorization: 'bearer wyr0ofzt3TFciX-xhbQDCg',
-  },
-  responseType: 'arraybuffer',
-};
+type Headers = { [key in string]?: string; };
 
-const get = async (path: string) => (await axios.get(`${apiBase}${path}`, config)).data;
+const get = async (path: string, headers?: Headers) => {
+  const config: AxiosRequestConfig = {
+    withCredentials: true,
+    responseType: 'arraybuffer',
+    headers,
+  };
+
+  const { data } = (await axios.get(`${apiBase}${path}`, config));
+
+  return data;
+};
 
 const obtainBasePath = (path: string) => {
   const segments = path.split('/');
@@ -45,7 +49,7 @@ class ReadmooExporter extends BaseExporter {
     await this.increasePending();
 
     const { id } = this.book;
-    const arrayBuffer = await get(`/api/book/${id}/nav`);
+    const arrayBuffer = await get(`/api/book/${id}/nav`, { authorization: 'bearer wyr0ofzt3TFciX-xhbQDCg' });
     const object = JSON.parse(arrayBufferToString(arrayBuffer));
     this.basePath = object.base as string;
 
@@ -94,7 +98,7 @@ class ReadmooExporter extends BaseExporter {
   private rootFilePath(containerXmlPath: string): string {
     const containerXml = arrayBufferToString(this.files[containerXmlPath] as ArrayBuffer);
 
-    return containerXml.match(/rootfile.*full-path="(.+\.opf)"/)[1];
+    return containerXml.match(/rootfile.*full-path="(.+\.opf)"/s)[1];
   }
 
   private contentFilePaths(rootFilePath: string): string[] {
